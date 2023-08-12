@@ -50,7 +50,7 @@ function App() {
   function fromJson(arr: string[]) {
     var outputData = ``;
     for (let i = 0; i < arr.length; i++) {
-      outputData += `${arr[i]} = json[${arr[i]}];\n`;
+      outputData += `${arr[i]} = json['${arr[i]}'];\n`;
     }
     return outputData;
   }
