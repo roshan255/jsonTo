@@ -9,14 +9,15 @@ function App() {
   const [json, setJson] = useState<string>("");
   const [code, setCode] = useState<string>("");
 
-  function jsonToDart(jsonObject: object) {
+  function jsonToDart(jsonObject: object, classname: string) {
     const temp = Object.keys(jsonObject);
-    const data = `class Root {
-      ${declaration(jsonObject,temp)}
+    const { innerBranch, outputData } = declaration(jsonObject, temp);
+    const data = `class ${classname} {
+      ${outputData}
   
-      Root({${selfBinding(temp)}}); 
+      ${classname}({${selfBinding(temp)}}); 
   
-      Root.fromJson(Map<String, dynamic> json) {
+      ${classname}.fromJson(Map<String, dynamic> json) {
           ${fromJson(temp)}
       }
   
@@ -26,20 +27,25 @@ function App() {
           return data;
       }
     }`;
-    setCode(data.toString());
+    return innerBranch + `\n\n` + data;
   }
 
-  function declaration(jsonObject:any,arr:string[]){
+  function declaration(jsonObject: any, arr: string[]) {
     var outputData = ``;
+    var innerBranch = ``;
     for (let i = 0; i < arr.length; i++) {
-      if(typeof(jsonObject[arr[i]])===typeof('string'))
-      outputData += `String? ${arr[i]};\n`;
-      else if(typeof(jsonObject[arr[i]])===typeof(true))
-      outputData += `bool? ${arr[i]};\n`;
-      else if(typeof(jsonObject[arr[i]])===typeof(1))
-      outputData += `int? ${arr[i]};\n`;
+      if (typeof jsonObject[arr[i]] === typeof "string")
+        outputData += `String? ${arr[i]};\n`;
+      else if (typeof jsonObject[arr[i]] === typeof true)
+        outputData += `bool? ${arr[i]};\n`;
+      else if (typeof jsonObject[arr[i]] === typeof 1)
+        outputData += `int? ${arr[i]};\n`;
+      else if (typeof jsonObject[arr[i]] === typeof { id: 1 }) {
+        outputData += `Items? ${arr[i]};\n`;
+        innerBranch = jsonToDart(jsonObject[arr[i]], arr[i]);
+      }
     }
-    return outputData;
+    return { innerBranch, outputData };
   }
 
   function selfBinding(arr: string[]) {
@@ -82,7 +88,8 @@ function App() {
       />
       <button
         onClick={() => {
-          jsonToDart(JSON.parse(json));
+          const data = jsonToDart(JSON.parse(json), "root");
+          setCode(data);
         }}
       >
         Convert
