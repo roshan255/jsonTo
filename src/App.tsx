@@ -12,7 +12,7 @@ function App() {
   function jsonToDart(jsonObject: object) {
     const temp = Object.keys(jsonObject);
     const data = `class Root {
-      ${""}
+      ${declaration(jsonObject,temp)}
   
       Root({${selfBinding(temp)}}); 
   
@@ -27,6 +27,19 @@ function App() {
       }
     }`;
     setCode(data.toString());
+  }
+
+  function declaration(jsonObject:any,arr:string[]){
+    var outputData = ``;
+    for (let i = 0; i < arr.length; i++) {
+      if(typeof(jsonObject[arr[i]])===typeof('string'))
+      outputData += `String? ${arr[i]};\n`;
+      else if(typeof(jsonObject[arr[i]])===typeof(true))
+      outputData += `bool? ${arr[i]};\n`;
+      else if(typeof(jsonObject[arr[i]])===typeof(1))
+      outputData += `int? ${arr[i]};\n`;
+    }
+    return outputData;
   }
 
   function selfBinding(arr: string[]) {
