@@ -3,7 +3,7 @@ import { useState } from "react";
 function useJson(){
     const [json, setJson] = useState<string>("");
     const [code, setCode] = useState<string>("");
-    const [rootClass, setRootClass] = useState<string>("root");
+    const [rootClass, setRootClass] = useState<string>("");
 
     function firstUpper(str:string){
         return str[0].toUpperCase() + str.slice(1)
@@ -27,6 +27,7 @@ function useJson(){
               return data;
           }
         }`;
+        console.log(data);
         return innerBranch + `\n\n` + data;
       }
     
@@ -41,8 +42,8 @@ function useJson(){
           else if (typeof jsonObject[arr[i]] === typeof 1)
             outputData += `int? ${arr[i]};\n`;
           else if (typeof jsonObject[arr[i]] === typeof { id: 1 }) {
-            outputData += `${firstUpper(arr[i])}? ${arr[i]};\n`;//need to change
-            innerBranch = jsonToDart(jsonObject[arr[i]], firstUpper(arr[i]));
+            outputData += `${firstUpper(arr[i])}? ${arr[i]};\n`;
+            innerBranch += jsonToDart(jsonObject[arr[i]], firstUpper(arr[i]));
           }
         }
         return { innerBranch, outputData };
@@ -56,7 +57,7 @@ function useJson(){
       function fromJson(jsonObject:any,arr: string[]) {
         var outputData = ``;
         for (let i = 0; i < arr.length; i++) {
-            if(typeof(jsonObject[arr[i]])===typeof({})) //need to change
+            if(typeof(jsonObject[arr[i]])===typeof({}))
                 outputData +=`${arr[i]} = json['${arr[i]}'] != null ? ${firstUpper(arr[i])}?.fromJson(json['${arr[i]}']) : null;\n`
             else
                 outputData += `${arr[i]} = json['${arr[i]}'];\n`;
