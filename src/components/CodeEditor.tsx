@@ -16,8 +16,8 @@ function CodeEditor({ value, className, mode, theme, onChange }: Props) {
       value={value}
       mode={mode}
       theme={theme}
-      width="500px"
-      height="400px"
+      width="650px"
+      height="450px"
     />
   );
 }

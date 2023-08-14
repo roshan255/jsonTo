@@ -1,3 +1,7 @@
 .lefteditor{
     float:left;
 }
+
+.margin {
+    margin: 20px;
+  }

@@ -12,6 +12,7 @@ function useJson(){
     function jsonToDart(jsonObject: object, classname: string) {
         const temp = Object.keys(jsonObject);
         const { innerBranch, outputData } = declaration(jsonObject, temp);
+        classname = classname?classname:"Root";
         const data = `class ${classname} {
           ${outputData}
       

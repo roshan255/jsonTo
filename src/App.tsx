@@ -11,10 +11,10 @@ function App() {
 
   return (
     <>
-      <div>
+      <div className="margin">
         <h1>Json to Dart</h1>
         <CodeEditor
-          theme="chrome"
+          theme="githutheme-chrome"
           mode="json"
           onChange={(newCode) => setJson(newCode)}
           value={json}
@@ -28,16 +28,25 @@ function App() {
           className="lefteditor"
         />
       </div>
+      <br />
       <input
+        className="margin"
         placeholder="Enter the root class name"
         value={rootClass}
         onChange={(event) => setRootClass(event.target.value)}
       ></input>
-      <br />
       <button
+        className="btn btn-primary"
         onClick={() => {
-          const data = jsonToDart(JSON.parse(json), rootClass);
-          setCode(data);
+          try {
+            const regex = /\,(?!\s*?[\{\[\"\'\w])/g;
+            const jsonString = json.replace(regex, "");
+            const obj = JSON.parse(jsonString);
+            const data = jsonToDart(obj, rootClass);
+            setCode(data);
+          } catch {
+            alert("check your Json syntax");
+          }
         }}
       >
         Convert
