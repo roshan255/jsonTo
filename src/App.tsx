@@ -8,6 +8,7 @@ import "ace-builds/src-noconflict/mode-dart";
 function App() {
   const [json, setJson] = useState<string>("");
   const [code, setCode] = useState<string>("");
+  const [rootClass, setRootClass] = useState<string>("root");
 
   function jsonToDart(jsonObject: object, classname: string) {
     const temp = Object.keys(jsonObject);
@@ -70,31 +71,39 @@ function App() {
   }
 
   return (
-    <div>
-      <h1>Json to Dart</h1>
-      <CodeEditor
-        theme="chrome"
-        mode="json"
-        onChange={(newCode) => setJson(newCode)}
-        value={json}
-        className="lefteditor"
-      />
-      <CodeEditor
-        theme="monokai"
-        mode="dart"
-        onChange={(newCode) => setCode(newCode)}
-        value={code}
-        className="lefteditor"
-      />
+    <>
+      <div>
+        <h1>Json to Dart</h1>
+        <CodeEditor
+          theme="chrome"
+          mode="json"
+          onChange={(newCode) => setJson(newCode)}
+          value={json}
+          className="lefteditor"
+        />
+        <CodeEditor
+          theme="monokai"
+          mode="dart"
+          onChange={(newCode) => setCode(newCode)}
+          value={code}
+          className="lefteditor"
+        />
+      </div>
+      <input
+        placeholder="Enter the root class name"
+        value={rootClass}
+        onChange={(event) => setRootClass(event.target.value)}
+      ></input>
+      <br />
       <button
         onClick={() => {
-          const data = jsonToDart(JSON.parse(json), "root");
+          const data = jsonToDart(JSON.parse(json), rootClass);
           setCode(data);
         }}
       >
         Convert
       </button>
-    </div>
+    </>
   );
 }
 
